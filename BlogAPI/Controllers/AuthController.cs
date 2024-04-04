@@ -15,8 +15,13 @@ namespace BlogAPI.Controllers
             _JWTAuthenticationRepository = JWTAuthentication;
         }
         [HttpGet]
-        public string Authentication(UserModel user)
+        public string Authentication(string UserName,string Password)
         {
+            var user = new UserModel()
+            {
+                UserName = UserName,
+                Password = Password
+            };
             var token = _JWTAuthenticationRepository.Authenticate(user);
 
             if (token == null)
