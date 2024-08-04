@@ -45,6 +45,7 @@ namespace BlogAPI
             builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<ICandleService,CandleService>();
 
             var app = builder.Build();
 

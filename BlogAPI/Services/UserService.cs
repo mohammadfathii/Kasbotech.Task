@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using BlogAPI.Services.IServices;
+using System.Security.Cryptography;
 
 namespace BlogAPI.Services
 {
@@ -27,7 +28,12 @@ namespace BlogAPI.Services
 
         public string GenerateRefreshToken()
         {
-            return Guid.NewGuid().ToString().Replace("-", "");
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
         }
 
         public string GenerateToken(int id, string username)
