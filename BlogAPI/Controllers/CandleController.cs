@@ -1,10 +1,14 @@
 ﻿using BlogAPI.Services.IServices;
 using BlogAPI.Shares.Models.Candle;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogAPI.Controllers
 {
-    public class CandleController : Controller
+    [ApiController]
+    [Route("[controller]")]
+    [Authorize]
+    public class CandleController : ControllerBase
     {
         private ICandleService _candleService;
         public CandleController(ICandleService candleService)
