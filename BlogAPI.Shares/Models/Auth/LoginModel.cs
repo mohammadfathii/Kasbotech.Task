@@ -1,6 +1,6 @@
-﻿namespace BlogAPI.Models
+﻿namespace BlogAPI.Shares.Models.Auth
 {
-    public class UserModel
+    public class LoginModel
     {
         public string UserName { get; set; }
         public string Password { get; set; }

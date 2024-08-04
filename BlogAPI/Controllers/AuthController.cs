@@ -1,6 +1,5 @@
-﻿using BlogAPI.Models;
-using BlogAPI.Services.Repositories;
-using Microsoft.AspNetCore.Authorization;
+﻿using BlogAPI.Services.Repositories;
+using BlogAPI.Shares.Models.User;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogAPI.Controllers
@@ -9,27 +8,27 @@ namespace BlogAPI.Controllers
     [Route("[controller]")]
     public class AuthController : ControllerBase
     {
-        private IJWTAuthenticationRepository _JWTAuthenticationRepository;
-        public AuthController(IJWTAuthenticationRepository JWTAuthentication)
+        private IJWTAuthenticationService _JWTAuthenticationRepository;
+        public AuthController(IJWTAuthenticationService JWTAuthentication)
         {
             _JWTAuthenticationRepository = JWTAuthentication;
         }
         [HttpGet]
-        public string Authentication(string UserName,string Password)
+        public string Authentication(string UserName, string Password)
         {
-            var user = new UserModel()
+            var user = new Shares.Models.Auth.LoginModel()
             {
                 UserName = UserName,
                 Password = Password
             };
-            var token = _JWTAuthenticationRepository.Authenticate(user);
+            var token = _JWTAuthenticationRepository.login(user);
 
             if (token == null)
             {
                 return "Not Founded User";
             }
 
-            return token.Token;
+            return token.AccessToken;
         }
     }
 }

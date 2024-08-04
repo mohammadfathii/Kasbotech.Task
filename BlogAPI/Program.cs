@@ -1,7 +1,8 @@
-
+using BlogAPI.Data;
 using BlogAPI.Services;
 using BlogAPI.Services.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 using System.Text;
@@ -30,7 +31,7 @@ namespace BlogAPI
             {
                 var key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:KEY"]);
                 options.SaveToken = true;
-                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateIssuer = false,
                     ValidateAudience = false,
@@ -42,7 +43,9 @@ namespace BlogAPI
                 };
             });
 
-            builder.Services.AddScoped<IJWTAuthenticationRepository,JWTAuthenticationRepository>();
+            builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+
+            builder.Services.AddScoped<IJWTAuthenticationService, JWTAuthenticationService>();
 
             var app = builder.Build();
 
