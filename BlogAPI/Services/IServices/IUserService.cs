@@ -1,9 +1,9 @@
 ﻿using BlogAPI.Shares.Models.Auth;
 using BlogAPI.Shares.Models;
 
-namespace BlogAPI.Services.Repositories
+namespace BlogAPI.Services.IServices
 {
-    public interface IJWTAuthenticationService
+    public interface IUserService
     {
         string GenerateToken(int id, string username);
         string GenerateRefreshToken();

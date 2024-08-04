@@ -1,4 +1,5 @@
-﻿using BlogAPI.Services.Repositories;
+﻿using BlogAPI.Services.IServices;
+using BlogAPI.Shares.Models.Auth;
 using BlogAPI.Shares.Models.User;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,13 +9,13 @@ namespace BlogAPI.Controllers
     [Route("[controller]")]
     public class AuthController : ControllerBase
     {
-        private IJWTAuthenticationService _JWTAuthenticationRepository;
-        public AuthController(IJWTAuthenticationService JWTAuthentication)
+        private IUserService _JWTAuthenticationRepository;
+        public AuthController(IUserService JWTAuthentication)
         {
             _JWTAuthenticationRepository = JWTAuthentication;
         }
-        [HttpGet]
-        public string Authentication(string UserName, string Password)
+        [HttpPost("/Auth/Login")]
+        public NewTokenModel Login(string UserName, string Password)
         {
             var user = new Shares.Models.Auth.LoginModel()
             {
@@ -25,10 +26,45 @@ namespace BlogAPI.Controllers
 
             if (token == null)
             {
-                return "Not Founded User";
+                return new NewTokenModel()
+                {
+                    AccessToken = "User Not Founded",
+                    RefreshToken = "User Not Founded"
+                };
             }
 
-            return token.AccessToken;
+            return token;
         }
+
+        [HttpPost("/Auth/Register")]
+        public bool Register(string UserNmae,string Password)
+        {
+            if (!ModelState.IsValid)
+            {
+                return false;
+            }
+
+            var register = _JWTAuthenticationRepository.register(new RegisterModel()
+            {
+                UserName = UserNmae,
+                Password = Password
+            });
+
+            if (register == false)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        [HttpPost("/Auth/Refresh")]
+        public NewTokenModel RefreshToken(RefreshTokenModel user)
+        {
+            var login = _JWTAuthenticationRepository.refreshToken(user);
+
+            return login;
+        }
+
     }
 }

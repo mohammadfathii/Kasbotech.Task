@@ -1,10 +1,9 @@
 using BlogAPI.Data;
 using BlogAPI.Services;
-using BlogAPI.Services.Repositories;
+using BlogAPI.Services.IServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace BlogAPI
@@ -45,7 +44,7 @@ namespace BlogAPI
 
             builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
-            builder.Services.AddScoped<IJWTAuthenticationService, JWTAuthenticationService>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             var app = builder.Build();
 

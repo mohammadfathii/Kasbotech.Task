@@ -1,5 +1,4 @@
 ﻿using BlogAPI.Data;
-using BlogAPI.Services.Repositories;
 using BlogAPI.Shares.Models.Auth;
 using BlogAPI.Shares.Models;
 using Microsoft.AspNetCore.Identity;
@@ -8,23 +7,17 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using BlogAPI.Services.IServices;
 
 namespace BlogAPI.Services
 {
-    public class JWTAuthenticationService : IJWTAuthenticationService
+    public class UserService : IUserService
     {
-
-        public IDictionary<string, string> Users { get; set; } = new Dictionary<string, string>()
-        {
-            { "123" ,"123" },
-            { "admin" ,"123" },
-            { "root" ,"123" },
-        };
 
         private IConfiguration _configuration;
         private AppDBContext _context;
         private PasswordHasher<object> _passwordHasher;
-        public JWTAuthenticationService(IConfiguration configuration, AppDBContext context)
+        public UserService(IConfiguration configuration, AppDBContext context)
         {
             _configuration = configuration;
             _context = context;
@@ -102,12 +95,7 @@ namespace BlogAPI.Services
         {
             var u = _context.Users.FirstOrDefault(x => x.UserName == user.UserName);
 
-            if (u.RefreshToken != user.RefreshToken)
-            {
-                return null;
-            }
-
-            if (u.RefreshTokenExpire != DateTime.Now)
+            if (u == null || u.RefreshToken != user.RefreshToken || u.RefreshTokenExpire <= DateTime.Now)
             {
                 return null;
             }
