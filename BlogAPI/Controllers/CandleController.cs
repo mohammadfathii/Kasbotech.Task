@@ -28,5 +28,14 @@ namespace BlogAPI.Controllers
 
             return true;
         }
+
+        [HttpGet("/Candle/GetAll")]
+        public List<CandleModel> GetAll()
+        {
+            var candles = _candleService.GetCandles();
+
+            return candles;
+        }
+
     }
 }
